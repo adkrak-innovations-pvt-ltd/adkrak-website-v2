@@ -32,7 +32,7 @@ export function EduNovaMock() {
     <div className="relative w-full h-full">
       {/* Back window: attendance grid */}
       <div
-        className="mock absolute"
+        className="mock absolute float-a"
         style={{
           width: '62%', right: '2%', top: '10%',
           transform: 'perspective(1400px) rotateY(-9deg) rotateX(3deg)',
@@ -44,10 +44,11 @@ export function EduNovaMock() {
             {Array.from({ length: 35 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded aspect-square"
+                className="rounded aspect-square cell-in"
                 style={{
                   background:
                     i % 9 === 4 ? '#fca5a5' : i % 5 === 0 ? '#a7f3d0' : '#e2f0f7',
+                  animationDelay: `${(i % 12) * 130}ms`,
                 }}
               />
             ))}
@@ -57,7 +58,7 @@ export function EduNovaMock() {
 
       {/* Front window: student record */}
       <div
-        className="mock absolute"
+        className="mock absolute float-b"
         style={{
           width: '58%', left: '2%', top: '20%',
           transform: 'perspective(1400px) rotateY(7deg) rotateX(2deg)',
@@ -111,7 +112,7 @@ export function RestoPosMock() {
     <div className="relative w-full h-full">
       {/* Back: kitchen display tickets */}
       <div
-        className="mock absolute"
+        className="mock absolute float-a"
         style={{
           width: '56%', right: '2%', top: '8%',
           transform: 'perspective(1400px) rotateY(-8deg) rotateX(3deg)',
@@ -121,7 +122,10 @@ export function RestoPosMock() {
         <div className="p-2.5 grid grid-cols-3 gap-2" style={{ background: '#1f2937' }}>
           {['#f97316', '#22c55e', '#f97316', '#eab308', '#22c55e', '#f97316'].map((c, i) => (
             <div key={i} className="rounded-lg p-2 space-y-1.5" style={{ background: '#374151' }}>
-              <div className="rounded" style={{ height: 4, width: '60%', background: c }} />
+              <div
+                className="rounded kds-status"
+                style={{ height: 4, width: '60%', background: c, animationDelay: `${i * 480}ms` }}
+              />
               <div className="rounded" style={{ height: 4, width: '85%', background: '#6b7280' }} />
               <div className="rounded" style={{ height: 4, width: '70%', background: '#6b7280' }} />
             </div>
@@ -131,7 +135,7 @@ export function RestoPosMock() {
 
       {/* Front: table grid */}
       <div
-        className="mock absolute"
+        className="mock absolute float-b"
         style={{
           width: '56%', left: '2%', top: '22%',
           transform: 'perspective(1400px) rotateY(7deg) rotateX(2deg)',
@@ -147,8 +151,14 @@ export function RestoPosMock() {
             ].map((c, i) => (
               <div
                 key={i}
-                className="rounded-lg flex flex-col items-center justify-center gap-1"
-                style={{ background: c, aspectRatio: '1.15' }}
+                className={`rounded-lg flex flex-col items-center justify-center gap-1 ${
+                  i % 4 === 1 ? 'table-flip' : ''
+                }`}
+                style={{
+                  background: c,
+                  aspectRatio: '1.15',
+                  animationDelay: `${i * 260}ms`,
+                }}
               >
                 <div className="rounded" style={{ width: 14, height: 4, background: 'rgba(0,0,0,0.22)' }} />
                 <div className="rounded" style={{ width: 9, height: 3, background: 'rgba(0,0,0,0.14)' }} />
@@ -167,7 +177,7 @@ export function ExamMock() {
     <div className="relative w-full h-full">
       {/* Back: proctor tiles */}
       <div
-        className="mock absolute"
+        className="mock absolute float-a"
         style={{
           width: '44%', right: '3%', top: '12%',
           transform: 'perspective(1400px) rotateY(-9deg) rotateX(3deg)',
@@ -192,10 +202,10 @@ export function ExamMock() {
                 }}
               />
               <div
-                className="absolute rounded-full"
+                className={`absolute rounded-full ${i === 3 ? 'flag-blink' : ''}`}
                 style={{
                   width: 5, height: 5, right: 5, top: 5,
-                  background: i === 3 ? '#f87171' : '#4ade80',
+                  background: '#4ade80',
                 }}
               />
             </div>
@@ -205,7 +215,7 @@ export function ExamMock() {
 
       {/* Front: question paper */}
       <div
-        className="mock absolute"
+        className="mock absolute float-b"
         style={{
           width: '62%', left: '2%', top: '18%',
           transform: 'perspective(1400px) rotateY(7deg) rotateX(2deg)',
@@ -229,7 +239,7 @@ export function ExamMock() {
                 style={{ background: i === 1 ? '#f5f3ff' : '#f8fafc' }}
               >
                 <div
-                  className="rounded-full shrink-0"
+                  className={`rounded-full shrink-0 ${i === 1 ? 'option-pick' : ''}`}
                   style={{
                     width: 12, height: 12,
                     border: `2px solid ${i === 1 ? '#8b5cf6' : '#cbd5e1'}`,
@@ -253,7 +263,7 @@ export function ReportMock() {
     <div className="relative w-full h-full">
       {/* Back: exported PDF */}
       <div
-        className="mock absolute"
+        className="mock absolute float-a"
         style={{
           width: '40%', right: '4%', top: '16%',
           transform: 'perspective(1400px) rotateY(-10deg) rotateX(3deg)',
@@ -274,7 +284,7 @@ export function ReportMock() {
 
       {/* Front: dashboard */}
       <div
-        className="mock absolute"
+        className="mock absolute float-b"
         style={{
           width: '60%', left: '2%', top: '14%',
           transform: 'perspective(1400px) rotateY(7deg) rotateX(2deg)',
@@ -295,9 +305,10 @@ export function ReportMock() {
             {bars.map((h, i) => (
               <div
                 key={i}
-                className="flex-1 rounded-t"
+                className="flex-1 rounded-t bar-grow"
                 style={{
                   height: `${h}%`,
+                  animationDelay: `${i * 160}ms`,
                   background: 'linear-gradient(180deg,#34d399,#06b6d4)',
                   opacity: 0.55 + (i % 3) * 0.15,
                 }}
@@ -321,7 +332,7 @@ export function RoadgenieMock() {
     <div className="relative w-full h-full">
       {/* Back: map */}
       <div
-        className="mock absolute"
+        className="mock absolute float-a"
         style={{
           width: '58%', right: '2%', top: '10%',
           transform: 'perspective(1400px) rotateY(-8deg) rotateX(3deg)',
@@ -342,6 +353,7 @@ export function RoadgenieMock() {
           {/* route */}
           <svg className="absolute inset-0 w-full h-full">
             <path
+              className="route-draw"
               d="M 20 150 Q 90 120 110 80 T 210 40"
               stroke="#ec4899" strokeWidth="3" fill="none" strokeLinecap="round"
             />
@@ -360,7 +372,7 @@ export function RoadgenieMock() {
 
       {/* Front: SOS phone */}
       <div
-        className="mock absolute"
+        className="mock absolute float-b"
         style={{
           width: '25%', left: '9%', top: '17%', borderRadius: 22,
           transform: 'perspective(1400px) rotateY(9deg) rotateX(2deg)',
@@ -371,7 +383,7 @@ export function RoadgenieMock() {
           <div className="p-3 space-y-2.5">
             <Bar w="70%" h={7} />
             <div
-              className="rounded-xl flex items-center justify-center"
+              className="rounded-xl flex items-center justify-center sos-pulse"
               style={{
                 height: 62,
                 background: 'linear-gradient(135deg,#ec4899,#d946ef)',
@@ -398,7 +410,7 @@ export function CustomWebMock() {
     <div className="relative w-full h-full">
       {/* Back: rendered site */}
       <div
-        className="mock absolute"
+        className="mock absolute float-a"
         style={{
           width: '56%', right: '2%', top: '9%',
           transform: 'perspective(1400px) rotateY(-8deg) rotateX(3deg)',
@@ -424,7 +436,7 @@ export function CustomWebMock() {
 
       {/* Front: code editor */}
       <div
-        className="mock absolute"
+        className="mock absolute float-b"
         style={{
           width: '54%', left: '2%', top: '20%',
           transform: 'perspective(1400px) rotateY(7deg) rotateX(2deg)',
@@ -445,7 +457,13 @@ export function CustomWebMock() {
             <div key={k} className="flex items-center gap-2">
               <div className="rounded" style={{ width: 10, height: 4, background: '#334155' }} />
               <div style={{ width: l.i * 14 }} />
-              <div className="rounded" style={{ width: l.w, height: 5, background: l.c, opacity: 0.75 }} />
+              <div
+                className="rounded type-in overflow-hidden"
+                style={{
+                  width: l.w, height: 5, background: l.c, opacity: 0.75,
+                  animationDelay: `${k * 220}ms`,
+                }}
+              />
             </div>
           ))}
         </div>

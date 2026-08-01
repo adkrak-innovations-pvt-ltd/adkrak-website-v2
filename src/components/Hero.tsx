@@ -1,41 +1,67 @@
-/* The four-pane brand mark — AD · KR · AK plus the whole.
-   Panes lift in one after another via CSS, so they can never be
-   left stranded invisible if the animation engine doesn't run. */
+/* Adkrak brand mark — three blades, one per founder, converging into an
+   apex. Each blade rises in turn, then the apex holds a slow pulse. */
 function BrandMark() {
-  const panes = [
-    { label: 'AD', a: 0.34, b: 0.14 },
-    { label: 'KR', a: 0.30, b: 0.11 },
-    { label: 'AK', a: 0.28, b: 0.10 },
-    { label: '', a: 0.24, b: 0.08 },
+  const blades = [
+    { label: 'AD', rot: '-26deg', x: '-92px', h: 120, d: 380 },
+    { label: 'KR', rot: '0deg', x: '0px', h: 168, d: 520 },
+    { label: 'AK', rot: '26deg', x: '92px', h: 120, d: 660 },
   ];
 
   return (
     <div
-      className="grid grid-cols-2 gap-3 md:gap-4 mx-auto"
-      style={{ width: 'min(62vw, 330px)' }}
+      className="relative mx-auto"
+      style={{ width: 'min(78vw, 330px)', height: 210 }}
     >
-      {panes.map((p, i) => (
+      {/* slow orbit ring */}
+      <div
+        className="mark-ring absolute left-1/2 top-1/2 rounded-full pointer-events-none"
+        style={{
+          width: 268,
+          height: 268,
+          marginLeft: -134,
+          marginTop: -134,
+          border: '1px dashed rgba(255,255,255,0.28)',
+        }}
+      />
+
+      {blades.map((b) => (
         <div
-          key={i}
-          className="rise rounded-xl grid place-items-center backdrop-blur-sm"
+          key={b.label}
+          className="blade absolute bottom-4 left-1/2 rounded-[14px] backdrop-blur-sm grid place-items-end justify-center pb-3"
           style={
             {
-              '--d': `${350 + i * 110}ms`,
-              aspectRatio: '1',
-              background: `linear-gradient(135deg, rgba(255,255,255,${p.a}), rgba(255,255,255,${p.b}))`,
-              border: '1px solid rgba(255,255,255,0.42)',
-              boxShadow: '0 12px 36px -14px rgba(10,40,80,0.45)',
+              '--rot': b.rot,
+              '--d': `${b.d}ms`,
+              width: 62,
+              height: b.h,
+              marginLeft: -31,
+              transform: `translateX(${b.x}) rotate(${b.rot})`,
+              background:
+                'linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.10))',
+              border: '1px solid rgba(255,255,255,0.5)',
+              boxShadow: '0 16px 40px -16px rgba(3,40,50,0.6)',
+              left: `calc(50% + ${b.x})`,
             } as React.CSSProperties
           }
         >
-          <span
-            className="font-display font-bold text-white/85 tracking-[0.14em]"
-            style={{ fontSize: 'clamp(13px, 3.1vw, 22px)' }}
-          >
-            {p.label}
+          <span className="font-display font-bold text-white text-[13px] tracking-[0.16em]">
+            {b.label}
           </span>
         </div>
       ))}
+
+      {/* apex spark where the blades converge */}
+      <div
+        className="apex absolute left-1/2 rounded-full pointer-events-none"
+        style={{
+          width: 20,
+          height: 20,
+          marginLeft: -10,
+          top: 6,
+          background:
+            'radial-gradient(circle, #ffffff 0%, #7fe7d2 45%, rgba(127,231,210,0) 72%)',
+        }}
+      />
     </div>
   );
 }
