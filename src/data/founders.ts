@@ -17,7 +17,7 @@ export const founders: Founder[] = [
   {
     monogram: 'AD',
     name: 'Adarsh P Pradeep',
-    roles: ['CEO', 'CTO'],
+    roles: ['Founder', 'CEO', 'CTO'],
     quote:
       "Great software should feel invisible — it does its job, then gets out of the way. Every feature we ship gets measured by that one bar.",
     bio: 'Engineer and founder. Leads product architecture, engineering, and the technology roadmap at Adkrak.',
@@ -27,7 +27,7 @@ export const founders: Founder[] = [
   {
     monogram: 'KR',
     name: 'Jayakrishna Jayan',
-    roles: ['CEO', 'CFO'],
+    roles: ['Founder', 'CEO', 'CFO'],
     quote:
       "Every rupee our customers spend with us should return ten-fold in time saved and productivity gained. That's the deal — and we hold ourselves to it.",
     bio: 'Finance and operations. Runs the numbers, the runway, and the promises we make to our customers.',
@@ -37,7 +37,7 @@ export const founders: Founder[] = [
   {
     monogram: 'AK',
     name: 'Akash Harikumar',
-    roles: ['CEO', 'CMO'],
+    roles: ['Founder', 'CEO', 'CMO'],
     quote:
       "We're building for the everyday industries — the restaurants, schools and roads that make real life happen. They deserve tools as good as their work.",
     bio: 'Brand, marketing and customer growth. Owns how the world hears about Adkrak.',
