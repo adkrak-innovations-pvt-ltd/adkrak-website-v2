@@ -1,6 +1,6 @@
 import Nav from './components/Nav';
 import Hero from './components/Hero';
-import BentoGrid from './components/BentoGrid';
+import Products from './components/Products';
 import FounderMatrix from './components/FounderMatrix';
 import ContactCTA from './components/ContactCTA';
 import Footer from './components/Footer';
@@ -11,7 +11,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <BentoGrid />
+        <Products />
         <FounderMatrix />
         <ContactCTA />
       </main>

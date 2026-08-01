@@ -100,8 +100,8 @@ export const statusLabel: Record<ProductStatus, string> = {
 };
 
 export const statusColor: Record<ProductStatus, string> = {
-  demo: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-  ready: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
-  wip: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-  service: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+  demo: 'bg-emerald-400/20 text-emerald-200 border-emerald-300/40',
+  ready: 'bg-sky-400/20 text-sky-200 border-sky-300/40',
+  wip: 'bg-amber-400/20 text-amber-200 border-amber-300/40',
+  service: 'bg-violet-400/20 text-violet-200 border-violet-300/40',
 };

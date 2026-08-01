@@ -1,78 +1,83 @@
-import { motion } from 'framer-motion';
+import Reveal from './Reveal';
+
+const channels = [
+  {
+    icon: '💬',
+    label: 'WhatsApp',
+    value: 'Chat with us',
+    href: 'https://wa.me/919876543210',
+    note: 'Usually under 2 hours',
+  },
+  {
+    icon: '📞',
+    label: 'Call',
+    value: '+91 98765 43210',
+    href: 'tel:+919876543210',
+    note: 'Mon–Sat · 9 AM – 8 PM IST',
+  },
+  {
+    icon: '✉️',
+    label: 'Email',
+    value: 'hello@adkrak.com',
+    href: 'mailto:hello@adkrak.com',
+    note: 'Replies within a business day',
+  },
+];
 
 export default function ContactCTA() {
   return (
-    <section id="contact" className="relative py-32">
-      <div className="max-w-5xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
-          className="grad-border-glow p-12 md:p-16 text-center relative overflow-hidden"
-        >
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none"
-            style={{
-              background:
-                'radial-gradient(circle at 30% 20%, rgba(6,182,212,0.25), transparent 50%), radial-gradient(circle at 70% 80%, rgba(52,211,153,0.20), transparent 50%)',
-            }}
-          />
-          <div className="relative">
-            <div className="pill mb-6 mx-auto">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Founders take every inbound
-            </div>
-            <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight">
-              Ready to see your <span className="grad-text">vision architected?</span>
-            </h2>
-            <p className="mt-6 text-slate-300 text-lg max-w-xl mx-auto">
-              Pick a channel. We reply within a business day — usually much sooner on WhatsApp.
-            </p>
+    <section id="contact" className="relative px-4 md:px-6 pb-20 md:pb-28">
+      <Reveal
+        className="panel max-w-[1180px] mx-auto"
+        style={{
+          background: 'linear-gradient(135deg, #12365c 0%, #0e6b8a 52%, #0f766e 100%)',
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(760px circle at 22% 18%, rgba(255,255,255,0.20), transparent 58%)',
+          }}
+        />
 
-            <div className="mt-10 grid sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-left">
+        <div className="relative px-7 md:px-14 py-16 md:py-20 text-center">
+          <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-bold text-white tracking-[-0.025em] leading-[1.05]">
+            Ready to see your vision architected?
+          </h2>
+          <p className="mt-6 text-white/80 text-[17px] md:text-lg max-w-xl mx-auto">
+            Founders take every inbound. Pick a channel — we reply within a
+            business day, usually much sooner on WhatsApp.
+          </p>
+
+          <div className="mt-12 grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
+            {channels.map((c) => (
               <a
-                href="https://wa.me/919876543210"
-                target="_blank"
-                rel="noreferrer"
-                className="grad-border p-5 hover:-translate-y-1 transition-all"
+                key={c.label}
+                href={c.href}
+                target={c.href.startsWith('http') ? '_blank' : undefined}
+                rel={c.href.startsWith('http') ? 'noreferrer' : undefined}
+                className="rounded-2xl p-6 transition-all duration-300
+                           hover:-translate-y-1"
+                style={{
+                  background: 'rgba(255,255,255,0.10)',
+                  border: '1px solid rgba(255,255,255,0.20)',
+                  backdropFilter: 'blur(10px)',
+                }}
               >
-                <div className="text-2xl mb-1">💬</div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-emerald-300">
-                  WhatsApp
+                <div className="text-2xl mb-2.5">{c.icon}</div>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
+                  {c.label}
                 </div>
-                <div className="text-white font-display font-bold text-lg mt-1">
-                  Chat now →
+                <div className="text-white font-display font-bold text-lg mt-1.5 break-words">
+                  {c.value}
                 </div>
+                <div className="text-white/55 text-[12px] mt-1.5">{c.note}</div>
               </a>
-              <a
-                href="tel:+919876543210"
-                className="grad-border p-5 hover:-translate-y-1 transition-all"
-              >
-                <div className="text-2xl mb-1">📞</div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                  Call
-                </div>
-                <div className="text-white font-display font-bold text-lg mt-1">
-                  +91 98765 43210
-                </div>
-              </a>
-              <a
-                href="mailto:hello@adkrak.com"
-                className="grad-border p-5 hover:-translate-y-1 transition-all"
-              >
-                <div className="text-2xl mb-1">✉️</div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-violet-300">
-                  Email
-                </div>
-                <div className="text-white font-display font-bold text-lg mt-1 break-all">
-                  hello@adkrak.com
-                </div>
-              </a>
-            </div>
+            ))}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }
