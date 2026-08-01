@@ -21,7 +21,7 @@ export const founders: Founder[] = [
     quote:
       "Great software should feel invisible — it does its job, then gets out of the way. Every feature we ship gets measured by that one bar.",
     bio: 'Engineer and founder. Leads product architecture, engineering, and the technology roadmap at Adkrak.',
-    photo: '/founder-adarsh.jpg',
+    photo: '/founder-adarsh.png',
     gradient: 'from-cyan-400 to-blue-500',
   },
   {
@@ -31,6 +31,7 @@ export const founders: Founder[] = [
     quote:
       "Every rupee our customers spend with us should return ten-fold in time saved and productivity gained. That's the deal — and we hold ourselves to it.",
     bio: 'Finance and operations. Runs the numbers, the runway, and the promises we make to our customers.',
+    photo: '/founder-jayakrishna.jpg',
     gradient: 'from-emerald-400 to-teal-500',
   },
   {
@@ -40,6 +41,7 @@ export const founders: Founder[] = [
     quote:
       "We're building for the everyday industries — the restaurants, schools and roads that make real life happen. They deserve tools as good as their work.",
     bio: 'Brand, marketing and customer growth. Owns how the world hears about Adkrak.',
+    photo: '/founder-akash.jpg',
     gradient: 'from-orange-400 to-red-500',
   },
 ];
