@@ -1,70 +1,109 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 
 /**
- * Scroll-triggered reveal.
+ * Scroll-linked fade.
  *
- * The hidden state is applied by JS (`js-armed`) only after mount, so the
- * markup's resting state stays visible. If JS or IntersectionObserver never
- * runs, the content simply shows — it can never be stranded invisible.
+ * Instead of a one-shot "reveal on enter", opacity/translate/blur are driven
+ * continuously by where the element sits in the viewport, so content eases IN
+ * as it rises and eases OUT as it leaves — a travelling feel rather than a pop.
+ *
+ * Safety: the resting markup is fully visible. Scroll-linked styles are only
+ * applied by JS after mount, so if JS or rAF never runs the content still
+ * reads instead of being stranded invisible.
+ *
+ * All instances share one rAF loop and one scroll listener.
  */
+
+const registry = new Set<() => void>();
+let rafId: number | null = null;
+let listening = false;
+
+function tick() {
+  rafId = null;
+  registry.forEach((fn) => fn());
+}
+
+function schedule() {
+  if (rafId === null) rafId = requestAnimationFrame(tick);
+}
+
+function ensureListener() {
+  if (listening) return;
+  listening = true;
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule, { passive: true });
+}
+
+const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+// smootherstep — no harsh start/stop
+const ease = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
+
 export default function Reveal({
   children,
   delay = 0,
   as: Tag = 'div',
   className = '',
+  lift = 46,
+  fadeOut = true,
   ...rest
 }: {
   children: ReactNode;
   delay?: number;
   as?: 'div' | 'section' | 'article';
   className?: string;
+  /** distance travelled while fading in (px) */
+  lift?: number;
+  /** also fade back out while leaving the top of the viewport */
+  fadeOut?: boolean;
   [key: string]: unknown;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [armed, setArmed] = useState(false);
-  const [shown, setShown] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Already in view on mount (e.g. above the fold) — skip the hidden state.
-    const r = el.getBoundingClientRect();
-    if (r.top < window.innerHeight * 0.92) {
-      setShown(true);
-      return;
-    }
+    // Stagger by shifting where this element's fade-in window begins.
+    const offset = delay * 0.18;
 
-    setArmed(true);
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            setShown(true);
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -70px 0px' }
-    );
+      // 0 when the top is at the bottom edge → 1 once risen into view
+      const inP = ease(clamp01((vh - r.top - offset) / (vh * 0.52)));
 
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+      // fade back out over the final stretch as it exits the top
+      const outP = fadeOut ? ease(clamp01((r.bottom + vh * 0.05) / (vh * 0.42))) : 1;
 
-  // Narrow to a concrete intrinsic tag: every element we render through
-  // Reveal ('div' | 'section' | 'article') shares HTMLAttributes, so div's
-  // prop type is a safe stand-in and avoids an unrepresentable union.
+      const p = Math.min(inP, outP);
+
+      el.style.opacity = String(p);
+      el.style.transform =
+        `translate3d(0, ${(1 - p) * lift}px, 0) scale(${0.985 + p * 0.015})`;
+      el.style.filter = p > 0.985 ? 'none' : `blur(${(1 - p) * 6}px)`;
+    };
+
+    el.style.willChange = 'opacity, transform, filter';
+
+    registry.add(update);
+    ensureListener();
+    update();
+
+    return () => {
+      registry.delete(update);
+      el.style.opacity = '';
+      el.style.transform = '';
+      el.style.filter = '';
+      el.style.willChange = '';
+    };
+  }, [delay, lift, fadeOut]);
+
   const Component = Tag as 'div';
 
   return (
-    <Component
-      ref={ref}
-      className={`reveal ${armed ? 'js-armed' : ''} ${shown ? 'in' : ''} ${className}`}
-      style={{ '--d': `${delay}ms` } as React.CSSProperties}
-      {...rest}
-    >
+    <Component ref={ref} className={className} {...rest}>
       {children}
     </Component>
   );

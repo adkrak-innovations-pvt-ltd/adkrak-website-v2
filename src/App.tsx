@@ -1,3 +1,4 @@
+import SmoothScroll from './components/SmoothScroll';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Products from './components/Products';
@@ -8,6 +9,7 @@ import Footer from './components/Footer';
 export default function App() {
   return (
     <div className="relative min-h-screen">
+      <SmoothScroll />
       <Nav />
       <main>
         <Hero />

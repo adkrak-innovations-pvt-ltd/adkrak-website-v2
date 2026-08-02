@@ -41,13 +41,12 @@ export default function SplitText({
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) {
-            setShown(true);
-            io.unobserve(e.target);
-          }
+          // Toggle rather than unobserve, so headings fade back out
+          // when they leave and re-play on the way back.
+          setShown(e.isIntersecting);
         });
       },
-      { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
     );
     io.observe(el);
     return () => io.disconnect();

@@ -26,7 +26,7 @@ export const founders: Founder[] = [
   },
   {
     monogram: 'KR',
-    name: 'Jayakrishna Jayan',
+    name: 'Jaikrishna Jayan',
     roles: ['Founder', 'CEO', 'CFO'],
     quote:
       "Every rupee our customers spend with us should return ten-fold in time saved and productivity gained. That's the deal — and we hold ourselves to it.",

@@ -32,7 +32,7 @@ export default function FounderMatrix() {
           />
 
           <Reveal delay={160} className="mt-7 text-[16px] md:text-[17px] text-white/50">
-            <span className="text-[#00f2fe] font-semibold">AD</span>arsh ·{' '}
+            <span className="text-[#00f2fe] font-semibold">AD</span>arsh · Jai
             <span className="text-[#34d399] font-semibold">KR</span>ishna ·{' '}
             <span className="text-[#f59e0b] font-semibold">AK</span>ash — the three
             names inside Adkrak. Engineering, finance and growth under one roof.
