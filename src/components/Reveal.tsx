@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode, type ElementType } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 /**
  * Scroll-triggered reveal.
@@ -16,11 +16,11 @@ export default function Reveal({
 }: {
   children: ReactNode;
   delay?: number;
-  as?: ElementType;
+  as?: 'div' | 'section' | 'article';
   className?: string;
   [key: string]: unknown;
 }) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [armed, setArmed] = useState(false);
   const [shown, setShown] = useState(false);
 
@@ -53,14 +53,19 @@ export default function Reveal({
     return () => io.disconnect();
   }, []);
 
+  // Narrow to a concrete intrinsic tag: every element we render through
+  // Reveal ('div' | 'section' | 'article') shares HTMLAttributes, so div's
+  // prop type is a safe stand-in and avoids an unrepresentable union.
+  const Component = Tag as 'div';
+
   return (
-    <Tag
+    <Component
       ref={ref}
       className={`reveal ${armed ? 'js-armed' : ''} ${shown ? 'in' : ''} ${className}`}
       style={{ '--d': `${delay}ms` } as React.CSSProperties}
       {...rest}
     >
       {children}
-    </Tag>
+    </Component>
   );
 }

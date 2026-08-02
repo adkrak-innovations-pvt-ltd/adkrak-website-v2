@@ -1,179 +1,204 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
+:root {
+  color-scheme: dark;
+  --ink: #080b11;
+  --cyan: #00f2fe;
+  --purple: #9d4edd;
+  --haze: #aab4c8;
+}
+
 html { scroll-behavior: smooth; }
 
 body {
-  /* Teal dawn — Adkrak's own horizon, not a sky-blue OS wallpaper */
-  background:
-    linear-gradient(180deg,
-      #04212f 0%,
-      #073c50 10%,
-      #0b6072 22%,
-      #10897f 36%,
-      #3fb59b 50%,
-      #82d2bd 64%,
-      #b8e6d9 78%,
-      #dcf1ea 90%,
-      #eef8f4 100%);
-  background-attachment: fixed;
-  color: #0f2744;
+  background: var(--ink);
+  color: #e6ecf5;
   min-height: 100vh;
   overflow-x: hidden;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: rgba(6,182,212,0.25); }
+.font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+
+::selection { background: rgba(0, 242, 254, 0.28); color: #fff; }
 
 ::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #dbe9f4; }
+::-webkit-scrollbar-track { background: #05070c; }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #6ba7d8, #06b6d4);
+  background: linear-gradient(180deg, var(--cyan), var(--purple));
   border-radius: 8px;
 }
 
-/* ---------- Panels: the core building block ---------- */
-.panel {
-  border-radius: 28px;
-  overflow: hidden;
+/* ---------------- Neon type ---------------- */
+.grad-text {
+  background: linear-gradient(100deg, #00f2fe 0%, #6ee7ff 32%, #b98cff 68%, #9d4edd 100%);
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradFlow 9s ease infinite;
+}
+@keyframes gradFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ---------------- Glassmorphic card + cursor spotlight ----------------
+   The border is drawn by a conic gradient masked to a radial spot that
+   follows the cursor, so the glass edge "lights up" only where you hover. */
+.glass {
   position: relative;
-  box-shadow:
-    0 2px 6px rgba(15,39,68,0.06),
-    0 18px 50px -18px rgba(15,39,68,0.28);
+  border-radius: 22px;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 0.4s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
 }
 
-/* Dark translucent copy card that overlays a panel */
-.copy-card {
-  background: rgba(28, 44, 68, 0.82);
-  backdrop-filter: saturate(160%) blur(18px);
-  -webkit-backdrop-filter: saturate(160%) blur(18px);
-  color: #fff;
-  border-radius: 20px;
-}
-
-/* Accent rule at the top of a copy card */
-.copy-card::before {
+/* Revealed glass border — a gradient ring masked to the cursor spot */
+.glass::before {
   content: '';
   position: absolute;
-  top: 0; left: 28px;
-  width: 68px; height: 4px;
-  border-radius: 0 0 4px 4px;
-  background: linear-gradient(90deg, #22d3ee, #34d399);
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-mask:
+    radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), #000 0%, transparent 72%),
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), #000 0%, transparent 72%) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: intersect;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 2;
 }
+.glass:hover::before { opacity: 1; }
 
-/* ---------- Buttons: fully-rounded pills ---------- */
+/* Interior glow that tracks the cursor */
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    440px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0, 242, 254, 0.13),
+    rgba(157, 78, 221, 0.09) 38%,
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.glass:hover::after { opacity: 1; }
+
+/* 3D tilt — JS writes --rx/--ry from cursor position */
+.tilt {
+  transform:
+    perspective(1100px)
+    rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg))
+    translateZ(0);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-inner { transform: translateZ(38px); transform-style: preserve-3d; }
+
+/* ---------------- Buttons ---------------- */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 30px;
+  padding: 15px 30px;
   border-radius: 999px;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.22,1,0.36,1),
-              box-shadow 0.25s ease,
-              background-color 0.25s ease;
   border: none;
+  transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), box-shadow 0.28s ease;
 }
-
 .btn-primary {
-  background: #0d6efd;
-  color: #fff;
-  box-shadow: 0 6px 18px -6px rgba(13,110,253,0.6);
+  background: linear-gradient(100deg, var(--cyan), var(--purple));
+  color: #05070c;
+  box-shadow: 0 8px 34px -10px rgba(0, 242, 254, 0.6);
 }
 .btn-primary:hover {
-  background: #0b5ed7;
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -8px rgba(13,110,253,0.7);
+  box-shadow: 0 18px 48px -12px rgba(157, 78, 221, 0.75);
 }
-
-.btn-light {
-  background: rgba(255,255,255,0.92);
-  color: #12365c;
-  box-shadow: 0 6px 18px -8px rgba(15,39,68,0.35);
+.btn-ghost {
+  background: rgba(255,255,255,0.045);
+  color: #e6ecf5;
+  border: 1px solid rgba(255,255,255,0.14);
 }
-.btn-light:hover {
-  background: #fff;
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(0,242,254,0.45);
   transform: translateY(-2px);
 }
 
-.btn-outline {
-  background: transparent;
-  color: #fff;
-  border: 1.5px solid rgba(255,255,255,0.65);
-}
-.btn-outline:hover {
-  background: rgba(255,255,255,0.14);
-  border-color: #fff;
-}
-
-/* ---------- Pills / status chips ---------- */
+/* ---------------- Status chips with a live pulse ---------------- */
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 5px 13px;
+  gap: 8px;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  border: 1px solid transparent;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  background: rgba(255,255,255,0.03);
+}
+.chip-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 0 currentColor;
+  animation: chipPulse 2.2s ease-out infinite;
+}
+@keyframes chipPulse {
+  0%   { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  70%  { box-shadow: 0 0 0 7px transparent; opacity: 0.75; }
+  100% { box-shadow: 0 0 0 0 transparent; opacity: 1; }
 }
 
-/* ---------- Faux app-UI mockups ---------- */
-.mock {
-  border-radius: 14px;
-  background: #fff;
-  box-shadow:
-    0 1px 2px rgba(15,39,68,0.10),
-    0 24px 60px -20px rgba(15,39,68,0.45);
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.9);
-}
+/* ---------------- Split-text reveal ----------------
+   Resting state is visible; JS arms the hidden state only after mount,
+   so copy can never be stranded invisible. */
+.split-line { display: block; overflow: hidden; }
+.split-word { display: inline-block; will-change: transform; }
 
-.mock-bar {
-  height: 30px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 12px;
-  background: #f3f6fa;
-  border-bottom: 1px solid #e4ebf3;
-}
-.mock-dot { width: 9px; height: 9px; border-radius: 50%; }
-
-/* Skeleton primitives inside mockups */
-.sk { border-radius: 5px; background: #e8eef5; }
-.sk-line { height: 8px; }
-.sk-accent { background: linear-gradient(90deg, #22d3ee, #34d399); }
-
-/* ---------- Reveal system ----------
-   Resting state is VISIBLE. Animation only ever moves *into* that state,
-   so if the animation engine never runs (hidden tab, reduced motion,
-   no JS) the content still reads. */
-@keyframes riseIn {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: none; }
-}
-
-.rise {
-  animation: riseIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--d, 0ms);
-}
-
-/* Scroll-triggered: JS adds .in when the element enters the viewport.
-   Without JS the element is simply visible from the start. */
-.reveal.js-armed {
+.split.js-armed .split-word {
   opacity: 0;
-  transform: translateY(34px);
+  transform: translateY(115%) rotate(3deg);
 }
+.split.js-armed.in .split-word {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i, 0) * 48ms + var(--d, 0ms));
+}
+
+/* Block reveal for non-text elements */
+.reveal.js-armed { opacity: 0; transform: translateY(34px); }
 .reveal.js-armed.in {
   opacity: 1;
   transform: none;
@@ -183,127 +208,28 @@ body {
   transition-delay: var(--d, 0ms);
 }
 
-/* ================= Living mockups =================
-   Motion that runs inside the product UIs, so each panel shows the
-   software actually doing something rather than a static picture.
-   All CSS-driven: no JS, and safe under reduced-motion. */
-
-/* Windows breathe at slightly different rates for depth */
-@keyframes floatA {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(0, -12px, 0); }
+/* Entrance rise (no scroll dependency) */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
 }
-@keyframes floatB {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(0, -20px, 0); }
-}
-.float-a { animation: floatA 7s ease-in-out infinite; }
-.float-b { animation: floatB 9s ease-in-out infinite; }
-
-/* KDS tickets cycling through states */
-@keyframes ticketCycle {
-  0%, 26%   { background: #f97316; width: 55%; }
-  33%, 59%  { background: #eab308; width: 74%; }
-  66%, 92%  { background: #22c55e; width: 92%; }
-  100%      { background: #f97316; width: 55%; }
-}
-.kds-status { animation: ticketCycle 6s ease-in-out infinite; }
-
-/* Chart bars growing from the baseline */
-@keyframes barGrow {
-  0%       { transform: scaleY(0.12); }
-  55%, 88% { transform: scaleY(1); }
-  100%     { transform: scaleY(0.12); }
-}
-.bar-grow { transform-origin: bottom; animation: barGrow 5.5s ease-in-out infinite; }
-
-/* Attendance cells filling in */
-@keyframes cellIn {
-  0%, 8%   { opacity: 0.18; transform: scale(0.72); }
-  22%, 82% { opacity: 1; transform: scale(1); }
-  100%     { opacity: 0.18; transform: scale(0.72); }
-}
-.cell-in { animation: cellIn 6s ease-in-out infinite; }
-
-/* Table statuses on the restaurant floor */
-@keyframes tableFlip {
-  0%, 30%  { background: #fed7aa; }
-  40%, 70% { background: #bbf7d0; }
-  80%, 100%{ background: #fed7aa; }
-}
-.table-flip { animation: tableFlip 7s ease-in-out infinite; }
-
-/* SOS button pulse + halo */
-@keyframes sosPulse {
-  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(236,72,153,0.55); }
-  50%      { transform: scale(1.04); box-shadow: 0 0 0 14px rgba(236,72,153,0); }
-}
-.sos-pulse { animation: sosPulse 2.4s ease-in-out infinite; }
-
-/* Vehicle travelling the route */
-@keyframes routeDraw {
-  0%   { stroke-dashoffset: 260; }
-  60%, 100% { stroke-dashoffset: 0; }
-}
-.route-draw {
-  stroke-dasharray: 260;
-  animation: routeDraw 4.5s ease-in-out infinite;
-}
-
-/* Code lines typing in */
-@keyframes typeIn {
-  0%, 4%    { width: 0; opacity: 0.35; }
-  16%, 86%  { opacity: 1; }
-  100%      { opacity: 0.35; }
-}
-.type-in { animation: typeIn 6s ease-in-out infinite both; }
-
-/* Proctor flag blinking */
-@keyframes flagBlink {
-  0%, 62%, 100% { background: #4ade80; }
-  70%, 92%      { background: #f87171; }
-}
-.flag-blink { animation: flagBlink 5s steps(1, end) infinite; }
-
-/* Exam option being selected */
-@keyframes optionPick {
-  0%, 24%  { background: transparent; border-color: #cbd5e1; }
-  36%, 88% { background: #8b5cf6;    border-color: #8b5cf6; }
-  100%     { background: transparent; border-color: #cbd5e1; }
-}
-.option-pick { animation: optionPick 5.5s ease-in-out infinite; }
-
-/* ---------- Brand mark: three blades that converge into an A ----------
-   AD · KR · AK — each founder is one blade; together they form the apex. */
-@keyframes bladeIn {
-  0%   { opacity: 0; transform: translateY(46px) rotate(var(--rot)) scaleY(0.4); }
-  100% { opacity: 1; transform: translateY(0) rotate(var(--rot)) scaleY(1); }
-}
-.blade {
-  animation: bladeIn 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+.rise {
+  animation: riseIn 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--d, 0ms);
-  transform-origin: bottom center;
 }
 
-@keyframes apexGlow {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50%      { opacity: 1;    transform: scale(1.22); }
+/* Hairline dividers + grid overlay */
+.hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,242,254,0.55), rgba(157,78,221,0.4), transparent);
 }
-.apex { animation: apexGlow 3.4s ease-in-out infinite; animation-delay: 1.4s; }
-
-@keyframes ringSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+.grid-overlay {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
 }
-.mark-ring { animation: ringSpin 26s linear infinite; }
-
-/* Sheen sweeping across a panel on entry */
-@keyframes sheen {
-  0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
-  22%  { opacity: 0.5; }
-  100% { transform: translateX(240%) skewX(-18deg); opacity: 0; }
-}
-.reveal.in .sheen { animation: sheen 1.9s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -313,6 +239,9 @@ body {
     transition-delay: 0ms !important;
     animation-iteration-count: 1 !important;
   }
-  /* Never let a reveal hold content hidden under reduced motion */
-  .reveal.js-armed { opacity: 1 !important; transform: none !important; }
+  .reveal.js-armed,
+  .split.js-armed .split-word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

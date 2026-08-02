@@ -1,83 +1,86 @@
+import SplitText from './SplitText';
+import TiltCard from './TiltCard';
 import Reveal from './Reveal';
 
 const channels = [
   {
-    icon: '💬',
     label: 'WhatsApp',
-    value: 'Chat with us',
-    href: 'https://wa.me/919876543210',
-    note: 'Usually under 2 hours',
+    value: 'Message a founder',
+    note: 'Direct line · fastest reply',
+    href: 'https://wa.me/917012837825',
+    accent: '#25D366',
+    glyph: '💬',
   },
   {
-    icon: '📞',
     label: 'Call',
-    value: '+91 98765 43210',
-    href: 'tel:+919876543210',
+    value: '+91 70128 37825',
     note: 'Mon–Sat · 9 AM – 8 PM IST',
+    href: 'tel:+917012837825',
+    accent: '#00f2fe',
+    glyph: '📞',
   },
   {
-    icon: '✉️',
     label: 'Email',
-    value: 'hello@adkrak.com',
-    href: 'mailto:hello@adkrak.com',
+    value: 'enquiry@adkrak.in',
     note: 'Replies within a business day',
+    href: 'mailto:enquiry@adkrak.in',
+    accent: '#9d4edd',
+    glyph: '✉️',
   },
 ];
 
 export default function ContactCTA() {
   return (
-    <section id="contact" className="relative px-4 md:px-6 pb-20 md:pb-28">
-      <Reveal
-        className="panel max-w-[1180px] mx-auto"
-        style={{
-          background: 'linear-gradient(135deg, #12365c 0%, #0e6b8a 52%, #0f766e 100%)',
-        }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(760px circle at 22% 18%, rgba(255,255,255,0.20), transparent 58%)',
-          }}
-        />
+    <section id="contact" className="relative px-5 md:px-8 pb-28 md:pb-36">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="hairline mb-20 md:mb-28" />
 
-        <div className="relative px-7 md:px-14 py-16 md:py-20 text-center">
-          <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-bold text-white tracking-[-0.025em] leading-[1.05]">
-            Ready to see your vision architected?
-          </h2>
-          <p className="mt-6 text-white/80 text-[17px] md:text-lg max-w-xl mx-auto">
-            Founders take every inbound. Pick a channel — we reply within a
-            business day, usually much sooner on WhatsApp.
-          </p>
+        <div className="text-center max-w-3xl mx-auto mb-14 md:mb-16">
+          <Reveal className="inline-flex items-center gap-2.5 rounded-full px-4 py-2 mb-7
+                            text-[11px] font-semibold uppercase tracking-[0.2em] text-white/60
+                            border border-white/12 bg-white/[0.03]">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#00f2fe' }} />
+            Founders take every inbound
+          </Reveal>
 
-          <div className="mt-12 grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
-            {channels.map((c) => (
-              <a
-                key={c.label}
-                href={c.href}
-                target={c.href.startsWith('http') ? '_blank' : undefined}
-                rel={c.href.startsWith('http') ? 'noreferrer' : undefined}
-                className="rounded-2xl p-6 transition-all duration-300
-                           hover:-translate-y-1"
-                style={{
-                  background: 'rgba(255,255,255,0.10)',
-                  border: '1px solid rgba(255,255,255,0.20)',
-                  backdropFilter: 'blur(10px)',
-                }}
-              >
-                <div className="text-2xl mb-2.5">{c.icon}</div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
-                  {c.label}
-                </div>
-                <div className="text-white font-display font-bold text-lg mt-1.5 break-words">
-                  {c.value}
-                </div>
-                <div className="text-white/55 text-[12px] mt-1.5">{c.note}</div>
-              </a>
-            ))}
-          </div>
+          <SplitText
+            lines={['Ready to build', 'something exceptional?']}
+            gradientFrom={1}
+            className="font-display text-4xl md:text-6xl lg:text-[66px] font-bold
+                       tracking-[-0.035em] leading-[1.0]"
+          />
+
+          <Reveal delay={160} className="mt-7 text-[16px] md:text-[17px] text-white/50 leading-relaxed">
+            No sales funnel, no chatbot. Pick a channel and you reach one of us directly.
+          </Reveal>
         </div>
-      </Reveal>
+
+        <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+          {channels.map((c, i) => (
+            <Reveal key={c.label} delay={i * 100}>
+              <a href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined}
+                 rel={c.href.startsWith('http') ? 'noreferrer' : undefined}
+                 className="block h-full">
+                <TiltCard className="h-full p-7">
+                  <div className="tilt-inner relative z-[1]">
+                    <div className="text-2xl mb-4">{c.glyph}</div>
+                    <div
+                      className="text-[10.5px] font-semibold uppercase tracking-[0.22em] mb-2"
+                      style={{ color: c.accent }}
+                    >
+                      {c.label}
+                    </div>
+                    <div className="font-display font-bold text-white text-[19px] leading-tight break-words">
+                      {c.value}
+                    </div>
+                    <div className="text-white/35 text-[12.5px] mt-2.5">{c.note}</div>
+                  </div>
+                </TiltCard>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
